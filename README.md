@@ -6,9 +6,22 @@ Dept. of Neurology
 
 MATlab code for EEG Analysis
 
-Researchers:
+Collaborators:
 
-	Dr. Andrew Goldfine ......"_____"
-	Nicholas Walsh ..........."Cycon"
+	Dr. Andrew Goldfine ......"_____" (Principal Investigator)
+	Nicholas Walsh ........... Cycon (GitHub Project Admin)
 	Miteshkumar Ahir ........."_____"
+	Kevin Bom ................"_____"
+	Dennis Choi .............."_____"
+	Naib Chowdhury............"_____"
+	David Cyrille ............"_____"
+	Fiqry Kleib .............."_____"
+	Brittany Snow ............"_____"
+	Luigi Pesce .............."_____"
+	Daryl McHugh ............."_____"
+	Joseph Kuruvilla ........."_____"
+	Lucas Martins ............"_____"
+	Chris Christodoulou ......"_____"
+	
+	
 
