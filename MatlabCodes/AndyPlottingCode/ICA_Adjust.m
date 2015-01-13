@@ -34,7 +34,7 @@ else
             
     
     %% Run ICA on the good channels (not EEG.badElectrodeIndices) and not on Cz since is all 0s
-    OUTEEG=pop_runica(EEG,'icatype','runica');%if use binica, may not work on a windows machine since the current code in path is set to macintosh!
+    OUTEEG=pop_runica(EEG,'icatype','binica');%if use binica, may not work on a windows machine since the current code in path is set to macintosh!
 %     
 %() Might want to save the ICA components! Current version above may not do
 %that unless recreate the data with the bad channels or interpolated
