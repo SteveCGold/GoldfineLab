@@ -56,7 +56,13 @@ else
          soglia_DV, diff_var, soglia_K, med2_K, meanK, soglia_SED, med2_SED, SED, soglia_SAD, med2_SAD, SAD, ...
          soglia_GDSF, med2_GDSF, GDSF, soglia_V, med2_V, maxvar, soglia_D, maxdin]=ADJUST(EEG,setfilename);
     
-   % OUTEEG=pop_subcomp(OUTEEG,artIC,1);%0 is no plot or 1 plots so you can confirm if you like it
+    if isempty(EEG.reject.gcompreject)
+	EEG.reject.gcompreject = zeros( size(EEG.icawinv,2));
+    end;
+  
+    EEG.reject.gcompreject(art)=1; %pop_prop_ADJ uses EEG.reject.gcompreject for accept/reject status (line 381), this line necessary for using GUI.
+   
+    % OUTEEG=pop_subcomp(OUTEEG,artIC,1);%0 is no plot or 1 plots so you can confirm if you like it
     EEG=pop_selectcomps_ADJ(EEG,1:size(EEG.data,1),art, horiz, vert, blink, disc,...
          soglia_DV, diff_var, soglia_K, med2_K, meanK, soglia_SED, med2_SED, SED, soglia_SAD, med2_SAD, SAD, ...
          soglia_GDSF, med2_GDSF, GDSF, soglia_V, med2_V, maxvar, soglia_D, maxdin); %ADJUST used nuovaV instead of maxvar. Fixed in this section.
