@@ -3,10 +3,10 @@ function ICA_Adjust
 %from EeglplotEpochChoose often with electrodes selected to be removed
 %(especially with the EGI headset). Created starting 12/10/14 AMG.
 
-%%Bring in the dataset
+%% Bring in the dataset
 pathname=uipickfiles('type',{'*.set','.set file'},'prompt','Pick EEGLAB .set file');%allow multiple files
 
-
+%%
 if isnumeric(pathname{1}) || isempty(pathname{1}) %if user presses cancel output is 0, done with no selection is {}
     return %exit the code
 else
@@ -14,9 +14,9 @@ else
         
     EEG = pop_loadset(pathname{ii});
     [setfilepath,setfilename]=fileparts(pathname{ii});
-
+    OLDEEG=EEG
     %% try filtering the data to see if it helps
-    EEG = pop_eegfiltnew(EEG, [], 1, 1650, true);
+    %EEG = pop_eegfiltnew(EEG, [], 1, 1650, true);
     
     %% remove the bad channels though save their chanlocs for later interpolation
     badChanlocs=EEG.chanlocs(EEG.badElectrodeIndices);
@@ -34,8 +34,8 @@ else
             
     
     %% Run ICA on the good channels (not EEG.badElectrodeIndices) and not on Cz since is all 0s
-    OUTEEG=pop_runica(EEG,'icatype','binica');%if use binica, may not work on a windows machine since the current code in path is set to macintosh!
-%     
+    EEG=pop_runica(EEG,'icatype','binica');%if use binica, may not work on a windows machine since the current code in path is set to macintosh!
+    EEG=pop_saveset(EEG,'filename',[setfilename '_ICATEST'],'filepath',setfilepath);%     
 %() Might want to save the ICA components! Current version above may not do
 %that unless recreate the data with the bad channels or interpolated
 %versions and then save the ICA components in the original file
@@ -52,11 +52,16 @@ else
     %first need an output filename for the report, give the same name as the original file
     [~,filename]=fileparts(pathname{ii}); %can use filename below to name things
 
-    artIC=ADJUST(OUTEEG,setfilename);
-    OUTEEG=pop_subcomp(OUTEEG,artIC,1);%0 is no plot or 1 plots so you can confirm if you like it
-
+    [art, horiz, vert, blink, disc,...
+         soglia_DV, diff_var, soglia_K, med2_K, meanK, soglia_SED, med2_SED, SED, soglia_SAD, med2_SAD, SAD, ...
+         soglia_GDSF, med2_GDSF, GDSF, soglia_V, med2_V, maxvar, soglia_D, maxdin]=ADJUST(EEG,setfilename);
+    
+   % OUTEEG=pop_subcomp(OUTEEG,artIC,1);%0 is no plot or 1 plots so you can confirm if you like it
+    EEG=pop_selectcomps_ADJ(EEG,1:size(EEG.data,1),art, horiz, vert, blink, disc,...
+         soglia_DV, diff_var, soglia_K, med2_K, meanK, soglia_SED, med2_SED, SED, soglia_SAD, med2_SAD, SAD, ...
+         soglia_GDSF, med2_GDSF, GDSF, soglia_V, med2_V, maxvar, soglia_D, maxdin); %ADJUST used nuovaV instead of maxvar. Fixed in this section.
     %% Interpolate in the missing channels and the reference channel (usually Cz)
-    EEG=pop_interp(OUTEEG,badChanlocs,'spherical');
+    EEG=pop_interp(EEG,badChanlocs,'spherical');
 
     %% Save the results
     EEG=pop_saveset(EEG,'filename',[setfilename '_ICA'],'filepath',setfilepath);
